@@ -1,0 +1,17 @@
+.venv
+fastapi
+quantization
+default_data
+study.ipynb
+chroma_db
+
+# Pythonのキャッシュ
+**/__pycache__/
+*.pyc
+
+# データベース・機密情報
+chroma_db/
+.env
+
+# その他、不要なシステムファイル
+.DS_Store
