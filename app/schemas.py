@@ -11,6 +11,26 @@ class Product(BaseModel):
     price: int = Field(ge=0)
     image_url: str
     ingredients: str
+    
+# 知識情報の定義
+class knowledge(BaseModel):
+    title: str = Field(...,description="記事やトピックのタイトル")
+    body: str = Field(...,description="知識の本文。RAGの検索対象となる中心部分")
+    
+    # メタデータをより具体的に定義
+    category: Optional[str] = Field(None, description="例: 病気、食事、しつけ、雑学")
+    source: Optional[str] = Field(None, description="引用元URLや書籍名")
+    tags: List[str] = Field(default_factory=list, description="検索の足しにするキーワード群")
+    
+    # その他、自由に入れられる枠も残しておく
+    extra_metadata: Dict[str, Any] = Field(default_factory=dict)
+    
+    def to_content_for_vector_db(self) -> str:
+        """VectorDBに登録するための『検索用テキスト』を生成するメソッド"""
+        # タイトルと本文を合体させ、さらにタグも含めることで検索にヒットしやすくする
+        tag_str = ", ".join(self.tags)
+        return f"タイトル: {self.title}\nカテゴリー: {self.category}\n内容: {self.body}\nキーワード: {tag_str}"
+    
 
 # request (Client -> FastAPI)
 class ChatRequest(BaseModel):

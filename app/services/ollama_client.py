@@ -7,10 +7,15 @@ async def ask_ollama(prompt: str, system_prompt: str):
         "model": "qwen2.5:3b", # ここでモデルを指定
         "prompt": prompt,
         "system": system_prompt,
-        "stream": False
+        "stream": False,
+        "options":{
+            "temparature":0.0,
+            "top_p": 0.9,
+            "num_predict":300
+        }
     }
     async with httpx.AsyncClient() as client:
-        response = await client.post(url, json=payload, timeout=60.0)
+        response = await client.post(url, json=payload, timeout=None)
         return response.json().get("response")
 
 """
