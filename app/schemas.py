@@ -5,11 +5,12 @@ from typing import List, Optional, Dict, Any
 # 商品情報の定義
 class Product(BaseModel):
     id: str
-    category_id: str
-    name: str
+    product_name: str
+    category_name: str 
+    tag_name: Optional[str] = None
     description: str
-    price: int = Field(ge=0)
-    image_url: str
+    price: int
+    image_url: Optional[str] = None
     ingredients: str
     
 # 知識情報の定義
