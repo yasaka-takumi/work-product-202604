@@ -14,7 +14,7 @@ class Product(BaseModel):
     ingredients: str
     
 # 知識情報の定義
-class knowledge(BaseModel):
+class Knowledge(BaseModel):
     title: str = Field(...,description="記事やトピックのタイトル")
     body: str = Field(...,description="知識の本文。RAGの検索対象となる中心部分")
     
@@ -22,9 +22,10 @@ class knowledge(BaseModel):
     category: Optional[str] = Field(None, description="例: 病気、食事、しつけ、雑学")
     source: Optional[str] = Field(None, description="引用元URLや書籍名")
     tags: List[str] = Field(default_factory=list, description="検索の足しにするキーワード群")
+    species: Optional[str] = Field(None, description="猫の種類")
     
     # その他、自由に入れられる枠も残しておく
-    extra_metadata: Dict[str, Any] = Field(default_factory=dict)
+    metadata: Dict[str, Any] = Field(default_factory=dict)
     
     def to_content_for_vector_db(self) -> str:
         """VectorDBに登録するための『検索用テキスト』を生成するメソッド"""
@@ -48,10 +49,14 @@ class ChatRequest(BaseModel):
 まだ、contextの中身が決まってなくて後で追加するときの書き方
     context : Optional[Dict[str, Any]] = Field(default_factory=dict)
 """
+
+class SimpleProducts(BaseModel):
+    id : str
+    image_url : str
     
 # response (FastAPI -> Client)
 class ChatResponse(BaseModel):
     answer : str
-    recommended_products : List[Product]
+    recommended_products : List[SimpleProducts]
     
 

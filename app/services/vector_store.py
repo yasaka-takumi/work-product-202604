@@ -3,7 +3,7 @@ from langchain_ollama import OllamaEmbeddings
 from langchain_core.documents import Document
 
 from typing import List
-from app.schemas import Product,knowledge
+from app.schemas import Product,Knowledge
 import json
 import os
 
@@ -31,7 +31,7 @@ async def add_to_product_db(products: List[Product]):
     documents = []
     for p in products:
         # 検索対象にするテキスト（名前と説明を合体させるのがコツ）
-        content = f"商品名: {p.name}\n説明: {p.description}\n原材料: {p.ingredients}"
+        content = f"商品名: {p.product_name}\n説明: {p.description}\n原材料: {p.ingredients}"
         
         # LangChainの形式に変換（メタデータにIDなどを入れる）
         doc = Document(
@@ -39,7 +39,7 @@ async def add_to_product_db(products: List[Product]):
             metadata={
                 "id": p.id,
                 "price": p.price,
-                "category_id": p.category_id,
+                "category_id": p.category_name,
                 "image_url": p.image_url,
                 "type":"product" # メタデータで種類を示しておく
             }
@@ -58,7 +58,7 @@ async def add_to_product_db(products: List[Product]):
             f.write(line + "\n")
 
 # 知識データ登録用 
-async def add_knowledge_to_db(knowledge_list: List[knowledge]):
+async def add_knowledge_to_db(knowledge_list: List[Knowledge]):
     documents = []
     for item in knowledge_list:
         doc = Document(
@@ -68,7 +68,7 @@ async def add_knowledge_to_db(knowledge_list: List[knowledge]):
                 "category": item.category,
                 "source": item.source,
                 "type": "knowledge",
-                **item.extra_metadata # 残りの自由枠を展開
+                **item.metadata # 残りの自由枠を展開
             }
         )
         documents.append(doc)
