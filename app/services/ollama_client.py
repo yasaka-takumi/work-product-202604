@@ -22,16 +22,26 @@ async def ask_ollama(prompt: str, system_prompt: str):
 # .get("key", "予備のvalue")であれば、keyがなければ、予備のvalueを渡す
 
 # streaming実装
-async def ask_ollama_streaming(message: str, system_prompt: str):
+async def ask_ollama_streaming(message: str, system_prompt: str, history: list=None):
     """Ollamaからストリーミング形式で回答を受け取るジェネレーター"""
     url = "http://localhost:12000/api/chat"  # OllamaのURL
     
+    
+    # 履歴がない場合は、空リスト
+    if history is None :
+        history = []
+    
+    # メッセージの組み立て
+    # 常に [Systemプロンプト] -> [過去のやり取り] -> [今回の質問] の順にする
+    messages = [{"role": "system", "content": system_prompt}]
+    messages.extend(history)  # 過去の user/assistant のやり取りを追加
+    messages.append({"role": "user", "content": message}) # 今回の入力を最後に追加
+    
+    
+    
     payload = {
         "model": "dsasai/llama3-elyza-jp-8b:latest",
-        "messages": [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": message}
-        ],
+        "messages": messages,
         "stream": True,  # ストリーミングを有効化
         "options": {
             "temperature": 0.0, # 決定論的な回答を優先
@@ -69,3 +79,16 @@ async def ask_ollama_streaming(message: str, system_prompt: str):
                     except json.JSONDecodeError:
                         # 不完全な行は次のchunkを待つ
                         continue
+
+"""
+terminal上でstreamの確認code
+docsからstream機能は確認できないため
+curl -s -N -X POST http://localhost:8000/chat \
+     -H "Content-Type: application/json" \
+     -d '{
+       "user_id": "test",
+       "session_id": "test",
+       "message": "こんにちは！簡単な自己紹介をして",
+       "external_data": {}
+     }'
+"""

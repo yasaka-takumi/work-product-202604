@@ -33,12 +33,22 @@ async def add_knowlege(knowledge: List[Knowledge]):
 
 import json
 from fastapi.responses import StreamingResponse
+from typing import Dict, List
+
+# --- メモリ保持用の変数を定義 (サーバー起動中のみ有効) ---
+# 構造: { "session_id": [{"role": "user", "content": "..."}, {"role": "assistant", "content": "..."}] }
+chat_memory: Dict[str, List[dict]] = {}
 
 @app.post("/chat", responses={200: {"description": "streaming text and recommend product data"}})
 async def chat_endpoint(request: ChatRequest):
     """process of chat with AI"""    
     user_name = request.external_data.get("user_nickname","飼い主")
     cat_name = request.external_data.get("cat_name","猫ちゃん")
+    session_id = request.session_id 
+    
+    # --- このセッションの過去ログを取得 ---
+    # 存在しない場合は空リスト。直近10件（5往復）程度に絞っておくと動作が安定します
+    history = chat_memory.get(session_id, [])
     
 # --- RAG: 両方のCollectionから情報を取得 ---
     # 検索関数を実行（k数は必要に応じて調整）
@@ -57,8 +67,6 @@ async def chat_endpoint(request: ChatRequest):
         f"※商品情報はユーザーから『おすすめは？』など具体的な要望があった時のみ紹介してください。"
         f"【商品情報】:\n{product_info}"
     )
-# Ollamaに問い合わせ（必要に応じて product_info もプロンプトに含める）
-    answer = await ask_ollama(request.message, system_prompt)   #  context_products=product_info
     
     # 推奨商品のリスト作成（メタデータからIDなどを抽出）
     recommended = [
@@ -68,12 +76,16 @@ async def chat_endpoint(request: ChatRequest):
 
     # 内部ジェネレーター関数
     async def stream_generator():
-        # 1. AIの回答をストリーミング
+        # --- 生成された全回答を保持する変数 ---
+        full_answer = ""
+        # AIの回答をストリーミング
         has_answer = False # デバッグ用：回答が届いたかチェック
-        async for chunk in ask_ollama_streaming(request.message, system_prompt):
+        
+        async for chunk in ask_ollama_streaming(request.message, system_prompt, history):
             if chunk:
                 has_answer = True
-            yield chunk  # クライアント（ブラウザやcurl）に1文字送る
+                full_answer += chunk # 履歴保存のために回答を繋げる
+                yield chunk
 
     # 回答が空だった場合のデバッグ表示（ターミナル等で見える）
         if not has_answer:
@@ -88,6 +100,15 @@ async def chat_endpoint(request: ChatRequest):
             yield json.dumps(recommended, ensure_ascii=False)
         else:
             yield json.dumps([], ensure_ascii=False)
+        
+        # --- 会話が終わったら履歴を更新 ---
+        # ユーザーの発言と、AIが今回生成した回答をセットで保存
+        if has_answer:
+            history.append({"role": "user", "content": request.message})
+            history.append({"role": "assistant", "content": full_answer})
+            
+            # メモリ節約と精度維持のため、直近10メッセージ分を保持して更新
+            chat_memory[session_id] = history[-10:]
 
     # text/plain または text/event-stream で送信
     return StreamingResponse(stream_generator(), media_type="text/plain")
