@@ -44,6 +44,8 @@ async def chat_endpoint(request: ChatRequest):
     """process of chat with AI"""    
     user_name = request.external_data.get("user_nickname","飼い主")
     cat_name = request.external_data.get("cat_name","猫ちゃん")
+    cat_age = request.external_data.get("cat_age", "不明(全年齢を対象として回答してください)")
+    cat_sex = request.external_data.get("cat_sex", "不明")
     session_id = request.session_id 
     
     # --- このセッションの過去ログを取得 ---
@@ -58,13 +60,22 @@ async def chat_endpoint(request: ChatRequest):
     knowledge_text = "\n".join([doc.page_content for doc in retrieved_data["knowledge"]])
     product_info = "\n".join([doc.page_content for doc in retrieved_data["products"]])
 
+    cat_information = (
+        f"【対象の猫の情報】\n"
+        f"- 名前: {cat_name}\n"
+        f"- 年齢区分: {cat_age}({cat_age}に合わせた配慮が必要です。)\n"
+        f"- 性別: {cat_sex}"
+    )
+    
         # システムプロンプトの構築（FT済みの性格を補強）
     system_prompt = (
         f"あなたは猫に関して専門的な知識を持っている、聞き上手なコンシェルジュです。\n"
-        f"【飼い主さんの名前,愛猫の名前】 : 【{user_name}さん, {cat_name}ちゃん】"
-        f"以下の【専門知識】を参考に、寄り添うアドバイスをしてください。\n"
-        f"【専門知識】:\n{knowledge_text}\n\n"
-        f"※商品情報はユーザーから『おすすめは？』など具体的な要望があった時のみ紹介してください。"
+        f"【飼い主さんの名前】 : 【{user_name}さん】\n"
+        f"{cat_information}\n"
+        f"上記のプロフィールに基づき、{cat_name}ちゃんに最適なアドバイスをしてください\n"
+        f"以下の【専門知識】を参考に、寄り添うアドバイスをしてください。\n\n"
+        f"【専門知識】:\n{knowledge_text}\n"
+        f"※商品情報はユーザーから『おすすめは？』など具体的な要望があった時のみ紹介してください。\n"
         f"【商品情報】:\n{product_info}"
     )
     

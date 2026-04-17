@@ -15,3 +15,9 @@ chroma_db/
 
 # その他、不要なシステムファイル
 .DS_Store
+
+# json -> jsonl
+convert.py
+
+# json形式のFT_data
+FT_data.json

@@ -21,6 +21,9 @@ async def ask_ollama(prompt: str, system_prompt: str):
 # pythonの辞書におけるget methodは辞書に指定のkeyがあればvalueをとってくるが、なければNoneを返す
 # .get("key", "予備のvalue")であれば、keyがなければ、予備のvalueを渡す
 
+
+
+
 # streaming実装
 async def ask_ollama_streaming(message: str, system_prompt: str, history: list=None):
     """Ollamaからストリーミング形式で回答を受け取るジェネレーター"""
@@ -91,4 +94,21 @@ curl -s -N -X POST http://localhost:8000/chat \
        "message": "こんにちは！簡単な自己紹介をして",
        "external_data": {}
      }'
+"""
+
+"""
+httpx.AsyncClientとは何か
+一言でいうと、「Webブラウザを立ち上げっぱなしにする」ようなイメージのオブジェクト
+
+通常、requets.get()などを個別に使うと、リクエストのたびに「接続を開いて、閉じる」という作業が発生する。
+これに対し、AsyncClient以下のようなメリットがある。
+
+- コネクションプール（再利用）: 一度確立した接続（TCPコネクション）を使い回すため、リクエストが高速化します。
+
+- 非同期対応: await を使って、リクエストの待ち時間に他の処理（別のユーザーの対応など）を並行して行うことができます。
+
+- Cookieや共通設定の維持: ログイン情報やタイムアウト設定などを全リクエストで共通化できます。
+
+ストリーミングの機能の実装において、「接続を維持し続ける必要がある」ため不可欠である。
+
 """
