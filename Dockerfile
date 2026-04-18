@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-# ローカルのタイムゾーン設定など（必要に応じて）
+# ローカルのタイムゾーン設定
 ENV TZ=Asia/Tokyo
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 

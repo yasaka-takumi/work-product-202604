@@ -1,21 +1,21 @@
 services:
-  # --- FastAPIの部屋 ---
+  # --- FastAPI container ---
   app:
-    build: .               # 今いる場所のDockerfileを使ってビルドしてね
+    build: .               # 今いる場所のDockerfileを使ってビルド
     ports:
-      - "8000:8000"        # あなたのPCの8000番を、コンテナの8000番に繋ぐ
+      - "8000:8000"        # 自分のPCの8000番を、コンテナの8000番に繋ぐ
     volumes:
       - .:/workspace       # 「今のフォルダ(.)」を「コンテナの/workspace」に繋ぐ
     depends_on:
-      - ollama             # ollamaが立ち上がってからappを起動してね
+      - ollama             # ollamaが立ち上がってからappを起動
 
-  # --- Ollamaの部屋 ---
+  # --- Ollama container ---
   ollama:
-    image: ollama/ollama:latest  # Docker Hubから公式の完成品を持ってくる
+    image: ollama/ollama:latest  # Docker Hubから持ってくる
     ports:
-      - "12000:11434"      # Ollamaの標準ポート
+      - "12000:11434"      # 自分のPCの12000番を、コンテナの11434番に繋ぐ
     volumes:
       - ollama_data:/root/.ollama # ダウンロードしたモデルを消えないように保存
 
 volumes:
-  ollama_data:             # モデルデータを保存するための専用の倉庫
+  ollama_data:             # モデルデータを保存するためのDocker Dektopの倉庫
