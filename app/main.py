@@ -1,11 +1,15 @@
+import json
+from typing import Dict, List
+
 from fastapi import FastAPI,status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
+
 from app.schemas import ChatRequest, ChatResponse,Product,Knowledge
 from app.services.ollama_client import ask_ollama,ask_ollama_streaming
-
 from app.services.vector_store import add_to_product_db,add_knowledge_to_db, search_all_contexts, get_custom_retriever
 
-from typing import List
+
 
 app = FastAPI()
 
@@ -31,9 +35,7 @@ async def add_knowlege(knowledge: List[Knowledge]):
 
 
 
-import json
-from fastapi.responses import StreamingResponse
-from typing import Dict, List
+
 
 # --- メモリ保持用の変数を定義 (サーバー起動中のみ有効) ---
 # 構造: { "session_id": [{"role": "user", "content": "..."}, {"role": "assistant", "content": "..."}] }

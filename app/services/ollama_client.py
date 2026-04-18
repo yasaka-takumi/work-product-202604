@@ -4,7 +4,7 @@ import json
 async def ask_ollama(prompt: str, system_prompt: str):
     url = "http://localhost:12000/api/generate" # OllamaのURL
     payload = {
-        "model": "qwen2.5:3b",
+        "model": "dsasai/llama3-elyza-jp-8b:latest",
         "prompt": prompt,
         "system": system_prompt,
         "stream": False,
@@ -47,7 +47,7 @@ async def ask_ollama_streaming(message: str, system_prompt: str, history: list=N
         "messages": messages,
         "stream": True,  # ストリーミングを有効化
         "options": {
-            "temperature": 0.0, # 決定論的な回答を優先
+            "temperature": 0.3, # 決定論的な回答を優先
             "num_predict":300
         }
     }
