@@ -3,12 +3,12 @@ import json
 
 import httpx
 
-OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://lovalhost:12000")
+OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:12000")
 
 async def ask_ollama(prompt: str, system_prompt: str):
     url = f"{OLLAMA_URL}/api/generate" # OllamaのURL
     payload = {
-        "model": "dsasai/llama3-elyza-jp-8b:latest",
+        "model": "qwen2.5:3b", # dsasai/llama3-elyza-jp-8b:latest
         "prompt": prompt,
         "system": system_prompt,
         "stream": False,
@@ -47,7 +47,7 @@ async def ask_ollama_streaming(message: str, system_prompt: str, history: list=N
     
     
     payload = {
-        "model": "dsasai/llama3-elyza-jp-8b:latest",
+        "model": "qwen2.5:3b", # dsasai/llama3-elyza-jp-8b:latest
         "messages": messages,
         "stream": True,  # ストリーミングを有効化
         "options": {

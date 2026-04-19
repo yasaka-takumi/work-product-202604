@@ -8,7 +8,7 @@ from langchain_core.documents import Document
 
 from app.schemas import Product,Knowledge
 
-OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://lovalhost:12000")
+OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:12000")
 
 # 1. 埋め込み（テキストを数値にする）モデルの設定
 embeddings = OllamaEmbeddings(model="mxbai-embed-large",
