@@ -1,15 +1,18 @@
+import os
+import json
+from typing import List
+
 from langchain_community.vectorstores import Chroma
 from langchain_ollama import OllamaEmbeddings
 from langchain_core.documents import Document
 
-from typing import List
 from app.schemas import Product,Knowledge
-import json
-import os
+
+OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://lovalhost:12000")
 
 # 1. 埋め込み（テキストを数値にする）モデルの設定
 embeddings = OllamaEmbeddings(model="mxbai-embed-large",
-                              base_url="http://localhost:12000")
+                              base_url=OLLAMA_URL)
 
 # 2. VectorDBの初期化（フォルダ名を指定して保存できるようにする）
 # 商品用のコレクション

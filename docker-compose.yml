@@ -6,6 +6,9 @@ services:
       - "8000:8000"        # 自分のPCの8000番を、コンテナの8000番に繋ぐ
     volumes:
       - .:/workspace       # 「今のフォルダ(.)」を「コンテナの/workspace」に繋ぐ
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    environment:
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://ollama:11434}
     depends_on:
       - ollama             # ollamaが立ち上がってからappを起動
 
@@ -16,6 +19,11 @@ services:
       - "12000:11434"      # 自分のPCの12000番を、コンテナの11434番に繋ぐ
     volumes:
       - ollama_data:/root/.ollama # ダウンロードしたモデルを消えないように保存
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    environment:
+      - OLLAMA_MAX_PARALLEL_DOWNLOADS=1
 
 volumes:
   ollama_data:             # モデルデータを保存するためのDocker Dektopの倉庫

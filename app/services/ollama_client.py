@@ -1,8 +1,12 @@
-import httpx
+import os
 import json
 
+import httpx
+
+OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://lovalhost:12000")
+
 async def ask_ollama(prompt: str, system_prompt: str):
-    url = "http://localhost:12000/api/generate" # OllamaのURL
+    url = f"{OLLAMA_URL}/api/generate" # OllamaのURL
     payload = {
         "model": "dsasai/llama3-elyza-jp-8b:latest",
         "prompt": prompt,
@@ -27,7 +31,7 @@ async def ask_ollama(prompt: str, system_prompt: str):
 # streaming実装
 async def ask_ollama_streaming(message: str, system_prompt: str, history: list=None):
     """Ollamaからストリーミング形式で回答を受け取るジェネレーター"""
-    url = "http://localhost:12000/api/chat"  # OllamaのURL
+    url = f"{OLLAMA_URL}/api/chat"  # OllamaのURL
     
     
     # 履歴がない場合は、空リスト
