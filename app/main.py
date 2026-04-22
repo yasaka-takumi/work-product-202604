@@ -72,7 +72,7 @@ async def chat_endpoint(request: ChatRequest):
         # システムプロンプトの構築（FT済みの性格を補強）
     system_prompt = (
         f"あなたは猫に関して専門的な知識を持っている、聞き上手なコンシェルジュです。\n"
-        f"【飼い主さんの名前】 : 【{user_name}さん】\n"
+        f"【飼い主】 : 【{user_name}さん】\n"
         f"{cat_information}\n"
         f"上記のプロフィールに基づき、{cat_name}ちゃんに最適なアドバイスをしてください\n"
         f"以下の【専門知識】を参考に、寄り添うアドバイスをしてください。\n\n"
