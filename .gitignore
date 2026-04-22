@@ -21,3 +21,9 @@ convert.py
 
 # json形式のFT_data
 FT_data.json
+
+# 機械学習モデル（巨大なバイナリファイル）
+*.gguf
+
+# キャッシュフォルダ
+.cache/
