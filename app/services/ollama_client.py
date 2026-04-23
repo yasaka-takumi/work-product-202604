@@ -3,7 +3,11 @@ import json
 
 import httpx
 
+# 環境変数に"OLLAMA_BASE_URL"が設定されていなければ、右側の引数をデフォルト値として返す
 OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:12000")
+
+# os.getenv -> OSのメモリ上に展開されている環境変数のなかから、指定した名前の値を引っ張ってきている
+# .envに値を書く -> load_dotenv()でOSのメモリにcopy -> os.getenv()がメモリから値を取得
 
 async def ask_ollama(prompt: str, system_prompt: str):
     url = f"{OLLAMA_URL}/api/generate" # OllamaのURL

@@ -20,6 +20,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# CORS(Cross-Origin Resource Shareing/オリジン間のリソース共有)の設定
+# allow_origin -> 許可するサイトのURL
+# allow_credentials -> cookieや認証情報(session_idなど)を含めるかどうか 
+# allow_methods -> GET, POST, PUT, DELETEなどの許可するmethodの選択
+# allow_headers -> Content-Typeなど -> 特殊なヘッダーを使う場合以外は["*"]でok
 
 @app.post("/admin/products",status_code=status.HTTP_201_CREATED)
 async def add_products(products: List[Product]):
@@ -124,7 +129,13 @@ async def chat_endpoint(request: ChatRequest):
             chat_memory[session_id] = history[-10:]
 
     # text/plain または text/event-stream で送信
-    return StreamingResponse(stream_generator(), media_type="text/plain")
+    return StreamingResponse(stream_generator(), media_type="text/plain; charset=utf-8")
+
+# media_type -> クライアントに送るレスポンスの「コンテンツの種類」を指定するもの
+# text/plain -> 純粋なテキストデータ 日本語を含む場合文字化けを防ぐ目的でcharsetも
+# text/html -> HTMLコンテンツ
+# application/json -> JSONデータ
+# video/mp4 -> MP4動画のストリーミング などがある
 
 
 

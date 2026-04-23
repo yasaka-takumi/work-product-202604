@@ -7,7 +7,7 @@ services:
     volumes:
       - .:/workspace       # 「今のフォルダ(.)」を「コンテナの/workspace」に繋ぐ
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-    environment:
+    environment:           # コンテナの起動の際に、コンテナ内のOS(Linux等)の環境変数としてセットする設定
       - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://ollama:11434}
     depends_on:
       - ollama             # ollamaが立ち上がってからappを起動
