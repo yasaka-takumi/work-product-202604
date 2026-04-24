@@ -8,9 +8,11 @@ git clone git@github.com:yasaka-takumi/work-product-202604.git<br>
 cd work-product-202604
 
 ### model pull (追加)
+cd elyza-finetuned<br>
+
 Hugging faceから<br>
 ta-ku-mi/elyza-finetuned-gguf<br>
- をdownload
+をdownload
 
 ### build docker image
 
@@ -31,7 +33,7 @@ docker compose exec ollama ollama pull mxbai-embed-large<br>
 - docker compose exec ollama ollama list -> 上記2つのモデルが出力されれば成功
 
 ### 4/24 変更
-docker compose exec ollama ollama pull elyza-finetuned<br>
+docker compose exec ollama ollama create cat-concierge -f /root/models/Modelfile<br>
 
 ### add products
 
