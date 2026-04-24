@@ -1,1 +1,1 @@
-/root/models/Llama-3-ELYZA-JP-8B.Q4_K_M.gguf
+FROM /root/models/Llama-3-ELYZA-JP-8B.Q4_K_M.gguf
