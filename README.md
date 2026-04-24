@@ -8,7 +8,6 @@ git clone git@github.com:yasaka-takumi/work-product-202604.git<br>
 cd work-product-202604
 
 ### model pull (追加)
-cd elyza-finetuned<br>
 
 Hugging faceから<br>
 ta-ku-mi/elyza-finetuned-gguf<br>
