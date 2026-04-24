@@ -19,6 +19,7 @@ services:
       - "12000:11434"      # 自分のPCの12000番を、コンテナの11434番に繋ぐ
     volumes:
       - ollama_data:/root/.ollama # ダウンロードしたモデルを消えないように保存
+      - ./elyza-finetuned:/root/models
     dns:
       - 8.8.8.8
       - 1.1.1.1

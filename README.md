@@ -7,6 +7,11 @@ git clone git@github.com:yasaka-takumi/work-product-202604.git<br>
 
 cd work-product-202604
 
+### model pull (追加)
+Hugging faceから<br>
+ta-ku-mi/elyza-finetuned-gguf<br>
+ をdownload
+
 ### build docker image
 
 コンテナを起動する<br>
