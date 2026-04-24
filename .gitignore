@@ -1,7 +1,6 @@
 .venv
 fastapi
 quantization
-default_data
 study.ipynb
 chroma_db
 

@@ -12,7 +12,13 @@ cd elyza-finetuned<br>
 
 Hugging faceから<br>
 ta-ku-mi/elyza-finetuned-gguf<br>
-をdownload
+をdownload<br>
+
+Hugging face url -> https://huggingface.co/ta-ku-mi/elyza-finetuned-gguf/tree/main <br>
+
+download後、ggufファイルをcloneしたdirectoryの<br>
+work-product-202604/elyza-finetuned/<br>
+にcopyする<br>
 
 ### build docker image
 
@@ -23,17 +29,18 @@ docker compose up -d --build<br>
 ### model pull
 
 ollamaから対象のmodelを２つpullする<br>
-
-- model : qwen2.5:3b
+- model : elyza-finetuned<br>
 - embedding model : mxbai-embed-large<br>
 
-docker compose exec ollama ollama pull qwen2.5:3b<br>
+docker compose exec ollama ollama create elyza-finetuned -f /root/models/Modelfile<br>
 docker compose exec ollama ollama pull mxbai-embed-large<br>
 - modelはollama_dataボリュームに保存されるため、上記の操作は初回のみ
 - docker compose exec ollama ollama list -> 上記2つのモデルが出力されれば成功
 
 ### 4/24 変更
-docker compose exec ollama ollama create cat-concierge -f /root/models/Modelfile<br>
+qwenは解雇
+
+- model : qwen2.5:3b
 
 ### add products
 
@@ -46,6 +53,14 @@ http://localhost:8000/docs<br>
 を開いて、中身を全選択してコピーする
 
 3. Post /admin/products -> Try it out を選択する<br>
+Request bodyに2の操作でcopyした内容で上書きして、Executeを実行する
+- 201 Createdが返ってくれば成功です
+
+### add knowledge data
+1. work-product-202604/default_data/cat_knowledge.json<br>
+を開いて、中身を全選択してコピーする<br>
+
+2. Post /admin/knowledge -> Try it out を選択する<br>
 Request bodyに2の操作でcopyした内容で上書きして、Executeを実行する
 - 201 Createdが返ってくれば成功です
 
