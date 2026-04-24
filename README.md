@@ -25,6 +25,9 @@ docker compose exec ollama ollama pull mxbai-embed-large<br>
 - modelはollama_dataボリュームに保存されるため、上記の操作は初回のみ
 - docker compose exec ollama ollama list -> 上記2つのモデルが出力されれば成功
 
+### 4/24 変更
+docker compose exec ollama ollama pull elyza-finetuned<br>
+
 ### add products
 
 1. docs（Swagger UI）を開く<br>
