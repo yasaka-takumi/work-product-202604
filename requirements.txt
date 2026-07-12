@@ -3,6 +3,11 @@ uvicorn==0.44.0
 pydantic==2.12.5
 langchain-core==1.2.26
 langchain-community==0.4.1
+langchain-classic==1.0.3
 langchain-ollama==1.1.0
 chromadb==1.5.6
 httpx==0.28.1
+python-dotenv
+huggingface_hub
+rank_bm25
+janome
